@@ -31,73 +31,73 @@ dietaryVariableList <- rawDietaryVariableList
 
 ###################do no use########################## Bereinigung für den alten Dictionary aus der Diskussion - do not use
 # Bereinigung Dictionary
-str(dictionary)
-class(dictionary)
-dim(dictionary) # 5382 x 2
-head(dictionary)
-View(dictionary)
-tail(dictionary)
+#str(dictionary)
+#class(dictionary)
+#dim(dictionary) # 5382 x 2
+#head(dictionary)
+#View(dictionary)
+#tail(dictionary)
 
 # how many missing value in dictionary? - Zero -> test ok
-table(is.na(dictionary))
+#table(is.na(dictionary))
 
 
 
 # Doppelt vorhandene Keys?
-nrow(dictionary) # Zeilen 5383
+#nrow(dictionary) # Zeilen 5383
 
 
-sum(duplicated(dictionary$VarName)) # duplicated 1849
+#sum(duplicated(dictionary$VarName)) # duplicated 1849
 
 
-str(duplicated(dictionary$VarName))
-duplicated(dictionary$VarName) # omitted 4383
+#str(duplicated(dictionary$VarName))
+#duplicated(dictionary$VarName) # omitted 4383
 
-duplicatedRows <- dictionary$VarName[duplicated(dictionary$VarName)] # get all duplicated keys (1849 Zilene)
+#duplicatedRows <- dictionary$VarName[duplicated(dictionary$VarName)] # get all duplicated keys (1849 Zilene)
 
-dictionary[dictionary$VarName == "RIDAGEMN",2] # Wie oft kommt der Key RIDAGEMN im Dictionary redundant vor?
+#dictionary[dictionary$VarName == "RIDAGEMN",2] # Wie oft kommt der Key RIDAGEMN im Dictionary redundant vor?
 
-length(dictionary[dictionary$VarName == "RIDAGEMN",2]) # Length of key
+#length(dictionary[dictionary$VarName == "RIDAGEMN",2]) # Length of key
 
 # description sind die Gleichen?
-length(unique(dictionary[dictionary$VarName == "RIDAGEMN",2])) # Zwei verschiedene Descriptions zum gleichen Key oder wie viele Unikate haben wir? -> es sollte nicht mehr als 1 sein
+#length(unique(dictionary[dictionary$VarName == "RIDAGEMN",2])) # Zwei verschiedene Descriptions zum gleichen Key oder wie viele Unikate haben wir? -> es sollte nicht mehr als 1 sein
 
 
 # Resultat von unique(dictionary[dictionary$VarName == "RIDAGEMN",2])
 # oben ist 4x gleiche Beschreibung und 1x etwas anderes
 
 
-tmp <- unique(dictionary[dictionary$VarName == "RIDAGEMN",2]) #hier sind die verschiendnen Description drauff
+#tmp <- unique(dictionary[dictionary$VarName == "RIDAGEMN",2]) #hier sind die verschiendnen Description drauff
 
 
 
 # ein anderer Versuch: Dataframe erzeugen
 
-duplicatedRowIndexList = c()
+#duplicatedRowIndexList = c()
 
 
-duplicatedRowIndexDf <- data.frame(9999999, "test")
-names(duplicatedRowIndexDf) <- c("Index", "Beschreibung")
+#duplicatedRowIndexDf <- data.frame(9999999, "test")
+#names(duplicatedRowIndexDf) <- c("Index", "Beschreibung")
 
 
-for (i in 1:length(duplicatedRows)) { # Duplikate deren Beschreibung überprüfen
-  if (length(unique(dictionary[dictionary$VarName == duplicatedRows[i],2])) > 1) { #hier mit dem Key zugreifen
+#for (i in 1:length(duplicatedRows)) { # Duplikate deren Beschreibung überprüfen
+# if (length(unique(dictionary[dictionary$VarName == duplicatedRows[i],2])) > 1) { #hier mit dem Key zugreifen
     # gebe mir die redundante Zeile aus
-    print(unique(dictionary[dictionary$VarName == duplicatedRows[i],2])) # VarName vs. Key --> sind beide gleich
-    vec <- unique(dictionary[dictionary$VarName == duplicatedRows[i],2]) #hilfs variable
-    duplicatedRowIndexDf <- rbind(duplicatedRowIndexDf, data.frame(Index = i, Beschreibung = vec))
-    cat("\n")
+#   print(unique(dictionary[dictionary$VarName == duplicatedRows[i],2])) # VarName vs. Key --> sind beide gleich
+#   vec <- unique(dictionary[dictionary$VarName == duplicatedRows[i],2]) #hilfs variable
+#   duplicatedRowIndexDf <- rbind(duplicatedRowIndexDf, data.frame(Index = i, Beschreibung = vec))
+#   cat("\n")
     
-  }
+# }
   
-}
+#}
 
-uniqueDuplicatedRowIndexDf <- unique(duplicatedRowIndexDf$Beschreibung) # nur die unikate holen 
+#uniqueDuplicatedRowIndexDf <- unique(duplicatedRowIndexDf$Beschreibung) # nur die unikate holen 
 
 
-View(uniqueDuplicatedRowIndexDf)
+#View(uniqueDuplicatedRowIndexDf)
 
-unique(dictionary$VarName)
+#unique(dictionary$VarName)
 
 
 # Zuviel Aufwand für diese Bereinigung - Stop an dieser Stelle, die ganze Kacke war für nichts
@@ -130,13 +130,13 @@ unique(dietaryVariableList$Data.File.Name) # Key zu den Klassen
 unique(dietaryVariableList$Variable.Description) # Var Describition
 unique(dietaryVariableList$Variable.Name) # Var Key
 
-## Unn�tigen Spalten l�schen
+## Unn?tigen Spalten l?schen
 drops <- c("Use.Constraints", "Component")
 dietaryVariableList <- dietaryVariableList[ , !(names(dietaryVariableList) %in% drops)]
 str(dietaryVariableList)
 
 
-## Nur Datens�tze aus 2013-2014
+## Nur Datens?tze aus 2013-2014
 dietaryVariableList <- dietaryVariableList[(dietaryVariableList$Begin.Year==2013 & dietaryVariableList$EndYear==2014),]
 View(dietaryVariableList)
 
@@ -183,7 +183,7 @@ unique(demographicVariableList$Use.Constraints) # none , RDC only
 relevantDemoVariable <- c("SEQN","DMDBORN4", "DMDCITZN", "DMDMARTL", "INDFMIN2", "RIAGENDR", "DMDHHSIZ", "DR1TCARB")
 
 
-## Unn�tigen Spalten l�schen
+## Unn?tigen Spalten l?schen
 drops <- c("Component", "Use.Constraints")
 demographicVariableList <- demographicVariableList[ , !(names(demographicVariableList) %in% drops)]
 str(demographicVariableList)
@@ -219,15 +219,15 @@ colnames(dictDiet)
 
 #################do not use ############################### dont use
 # Spalten renamen
-dietRenameColumn <- function(oldname, newname){
-  names(diet)[names(diet) == oldname] <- newname
+#dietRenameColumn <- function(oldname, newname){
+# names(diet)[names(diet) == oldname] <- newname
   #names(diet)[1]
-  return(diet)
-}
+# return(diet)
+#}
 # Test - ok
-diet2 <- dietRenameColumn("WTDRD1", "test")
-colnames(diet2)
-diet2 <- diet
+#diet2 <- dietRenameColumn("WTDRD1", "test")
+#colnames(diet2)
+#diet2 <- diet
 
 
 
@@ -340,7 +340,7 @@ corrplot(d, type = "upper", order = "hclust",
 #d <- as.data.frame(d)
 dim(d)
 d
-d[d > 0.85 & d<1]
+unique(d[d > 0.85 & d<1])
 d > 0.85
 
 
@@ -395,9 +395,169 @@ bp
 pie <- bp + coord_polar("y", start=0)
 pie
 
+############################################################################# # ML Algo
+
+supplementsInMg <- grep("(mg)", colnames(diet2))[15:19]
+saltIndex <- grep("add ordinary salt to ", colnames(diet2))
+
+lstOfKeys <- colnames(diet3[supplementsInMg])
+colnames(diet3[saltIndex])
+
+# f <- as.formula(paste("c(", paste(rpartInput(), collapse = "+"), sep ="~"))
+
+
+#salt
+#plot(DR1TCHOL  ~ DBD100 +DR1TATOA, data = diet3, )
+
+
+# Basic Scatterplot Matrix
+param1 <- as.formula(paste(" ", paste(lstOfKeys, collapse = " + "), sep = "~"))
+pairs(param1,data=diet3, main="Simple Scatterplot Matrix")
+
+#library(lattice)
+
+
+#Matrixplot 
+pairs(diet3[supplementsInMg]) # achtung allenfalls zu viel
+
+#Matrix Plot von Hand auslesen
+head(cor(na.omit(diet3[grep("(mg)", colnames(diet2))])) > 0.88) #linearen cor DR1TCHL vs. DR1TCHOL
+pairs(diet3[c(60, 42)], labels = names(diet2[c(60, 42)])) # mit labels machen
+
+#Boxplot
+boxplot(diet3[supplementsInMg])
+
+
+########## matrix plot schöner - dauer lange #########
+# http://www.sthda.com/english/wiki/scatter-plot-matrices-r-base-graphs
+
+# Bist du in einer Diät? 1: yes, 2: no, 9: don't know, .: Missing/NA 
+names(diet[18])
+unique(diet3$DRQSDIET)
+
+# NA werte mit 9 ersetzen
+diet3$DRQSDIET[is.na(diet3$DRQSDIET)] <- 9
+
+
+#my_cols[names(diet3[,supplementsInMg])]
+#install.packages("randomcoloR")
+library(randomcoloR)
+n <- length(lstOfKeys) # anzahl key mapping auf colors
+palette <- distinctColorPalette(n)
+
+my_cols <- palette #c("#00AFBB", "#E7B800", "#FC4E07")  
+pairs(diet3[,supplementsInMg], pch = 19,  cex = 0.5,
+      col = my_cols[diet3$DRQSDIET], #punde my_cols[iris$Species]
+      lower.panel=NULL)
+
+# Correlation panel
+panel.cor <- function(x, y){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- round(cor(x, y), digits=2)
+  txt <- paste0("R = ", r)
+  cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+# Customize upper panel
+upper.panel<-function(x, y){
+  points(x,y, pch = 19, col = my_cols[diet3$DRQSDIET])
+}
+# Create the plots
+pairs(na.omit(diet3[,supplementsInMg]), 
+      lower.panel = panel.cor,
+      upper.panel = upper.panel)
 
 
 
+
+
+#corCheck <- na.omit(diet3[, 50:60])
+corCheck <- na.omit(diet3[, supplementsInMg])
+
+
+d <- cor(corCheck)
+summary(d, digits = 1)
+
+
+#d <- as.data.frame(d)
+dim(d)
+d
+unique(d[d > 0.85 & d<1])
+d > 0.85
+
+
+######################## Multilinear regression
+
+# haben die Nährstoffe einen Zusammenhalt mit unterschiedlichen Total Haushaltseinkommen oder Diet und Gewicht?
+
+## Questionary Daten einlesen
+rawQuestionaryData <- read.csv("questionnaire.csv", stringsAsFactors = FALSE)
+questionaryData <- rawQuestionaryData
+questionaryData <- questionaryData[c("SEQN", "WHD020")] # nur die relevanten daten holen
+diet4 <- merge(diet3, questionaryData, by = "SEQN")
+str(diet4$WHD020)
+
+# WHD020 - Current self-reported weight (pounds)
+weightIndex <- grep("WHD020", names(diet4)) #215
+
+#INDHHIN2	Total household income (reported as a range value in dollars)
+incomeIndex <- grep("INDHHIN2", names(diet4)) #215
+
+
+#Bereinigung
+demographicVariableList <- demographicVariableList[(demographicVariableList$Begin.Year==2013 & demographicVariableList$EndYear==2014),]
+View(demographicVariableList)
+
+unique(diet4$WHD020)
+
+diet4 <- diet4[(diet4$WHD020 != 7777),] #7777 -> refused löschen
+diet4 <- diet4[(diet4$WHD020 != 9999),] #9999 -> dont know löschen
+diet4 <- diet4[!is.na(diet4$WHD020),] #7777 -> refused löschen
+
+#diet3 <- diet3[(!is.na(diet3$DRQSDT4) & !is.na(diet3$DR1TSUGR)),]
+
+View(diet4)
+
+
+
+#param1 <- as.formula(paste(" ", paste(lstOfKeys, collapse = " + "), sep = "~"))
+param2 <- as.formula(paste("WHD020 ~ INDHHIN2", paste(names(diet4[, grep("(mg)", names(diet2))]), collapse = " + "), sep = "+"))
+
+
+
+
+
+
+
+
+
+ml <- lm(param2, data = diet4, na.action = na.omit)
+summary(ml)
+
+ml <- lm(WHD020 ~ 
+           INDHHIN2 + #Total household income
+           DR1TCHOL + 
+           DR1TNIAC + 
+           DR1TPHOS + 
+           DR1TMAGN + 
+           DR1TCAFF
+         , data = diet4)
+summary(ml)
+
+plot(ml)
+
+dd <- c("INDHHIN2", "DR1TCHOL","DR1TNIAC", "DR1TPHOS", "DR1TMAGN", "DR1TCAFF")
+
+#sugi
+getDescriptionTmp <- function(diet_key) {
+  dietKeyIndex <- grep(diet_key, colnames(diet3))
+  out <- names(diet2)[dietKeyIndex]
+  return(out)
+}
+
+list_of_keys <- dd
+list_of_description <-unlist(lapply(list_of_keys, getDescriptionTmp))
 
 
 ###### shiny #################################################################
