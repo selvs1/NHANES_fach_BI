@@ -1,14 +1,15 @@
 ########################## Thema Diet #############################
 
 
-setwd("..")
-setwd("./BI/Project_Daten2")
-setwd("./Project_Daten2")
-getwd()
+#setwd("..")
+#setwd("./BI/Project_Daten2")
+#setwd("./Project_Daten2")
+#getwd()
 
 library(dplyr)
-
+library(ggplot2)
 library(readxl)
+
 
 
 
@@ -23,6 +24,7 @@ rawDietaryVariableList <- read.csv("2013 - 2014 Dietary Variable List.csv", stri
 # Backups
 #dictionary <- rawdictionary
 diet <- rawDietData
+#View(diet) # für uns Menschen ist das schwierig zu lesen
 dietaryVariableList <- rawDietaryVariableList
 
 ####################Grob Analyse################################# -> go: to grob analyse 2
@@ -100,7 +102,7 @@ dietaryVariableList <- rawDietaryVariableList
 #unique(dictionary$VarName)
 
 
-# Zuviel Aufwand für diese Bereinigung - Stop an dieser Stelle, die ganze Kacke war für nichts
+# Zuviel Aufwand für diese Bereinigung - Stop an dieser Stelle, die ganze Übung war für nichts
 
 
 # :goto Grob Anlyse 2
@@ -109,10 +111,8 @@ dietaryVariableList <- rawDietaryVariableList
 
 # Dataset mal ansehen 
 
-
-
 # Check Dictionary VariableList
-View(dietaryVariableList)
+#View(dietaryVariableList) # Diet Datensatz besteht aus folgenden Attributen
 head(dietaryVariableList)
 
 dim(dietaryVariableList) # 912 x 8 spalten
@@ -130,6 +130,7 @@ unique(dietaryVariableList$Data.File.Name) # Key zu den Klassen
 unique(dietaryVariableList$Variable.Description) # Var Describition
 unique(dietaryVariableList$Variable.Name) # Var Key
 
+
 ## Unn?tigen Spalten l?schen
 drops <- c("Use.Constraints", "Component")
 dietaryVariableList <- dietaryVariableList[ , !(names(dietaryVariableList) %in% drops)]
@@ -138,7 +139,7 @@ str(dietaryVariableList)
 
 ## Nur Datens?tze aus 2013-2014
 dietaryVariableList <- dietaryVariableList[(dietaryVariableList$Begin.Year==2013 & dietaryVariableList$EndYear==2014),]
-View(dietaryVariableList)
+#View(dietaryVariableList)
 
 
 
@@ -146,8 +147,6 @@ View(dietaryVariableList)
 
 # https://wwwn.cdc.gov/Nchs/Nhanes/Search/variablelist.aspx?Component=Dietary&CycleBeginYear=2013
 rawDemographicData <- read.csv("demographic.csv", stringsAsFactors = FALSE)
-
-
 rawDemographicVariableList <- read.csv("2013-2014 Demographics Variable List.csv", stringsAsFactors = FALSE)
 
 demographicData <- rawDemographicData
@@ -156,13 +155,14 @@ demographicVariableList <- rawDemographicVariableList
 
 
 # Check Demographic Dictionary VariableList
-View(demographicVariableList)
+#View(demographicVariableList) # Demographischer Datensatz hat folgende Attribute
 head(demographicVariableList)
 
 dim(demographicVariableList) # 369 x 8 spalten
 
 str(demographicVariableList) # Dataframe
 
+# Spalten dieser Datensatz überprüfen
 unique(demographicVariableList$Variable.Name) # ok
 unique(demographicVariableList$Variable.Description)
 
@@ -180,7 +180,7 @@ unique(demographicVariableList$Component) # nur Demographics --> kann man ja lö
 unique(demographicVariableList$Use.Constraints) # none , RDC only
 
 
-relevantDemoVariable <- c("SEQN","DMDBORN4", "DMDCITZN", "DMDMARTL", "INDFMIN2", "RIAGENDR", "DMDHHSIZ", "DR1TCARB")
+#relevantDemoVariable <- c("SEQN","DMDBORN4", "DMDCITZN", "DMDMARTL", "INDFMIN2", "RIAGENDR", "DMDHHSIZ", "DR1TCARB")
 
 
 ## Unn?tigen Spalten l?schen
@@ -188,13 +188,13 @@ drops <- c("Component", "Use.Constraints")
 demographicVariableList <- demographicVariableList[ , !(names(demographicVariableList) %in% drops)]
 str(demographicVariableList)
 
-View(demographicVariableList)
+#View(demographicVariableList)
 
 ## Nur Datensätze aus 2013-2014
 demographicVariableList <- demographicVariableList[(demographicVariableList$Begin.Year==2013 & demographicVariableList$EndYear==2014),]
-View(demographicVariableList)
+#View(demographicVariableList)
 
-##################################################### Nun unsere Dictionary Bereinigung, nun unsere haupt scheisse bereinigen
+##################################################### Nun unsere Dictionary Bereinigung, nun unsere haupt ... bereinigen
 dictDiet <- dietaryVariableList
 dictDemo <- demographicVariableList
 
@@ -231,6 +231,9 @@ colnames(dictDiet)
 
 
 
+
+
+
 ##################use this##############################
 # rename each column
 diet2 <- diet
@@ -238,6 +241,7 @@ colnames(diet2)
 
 dictDiet$Variable.Name
 
+# Spaltennamen mit Description labeln
 for (i in 1:ncol(diet2)) {
   key <- names(diet2)[i]
   description <- dictDiet[dictDiet$Variable.Name == key, 2][1] #only first match
@@ -249,7 +253,9 @@ for (i in 1:ncol(diet2)) {
 
 # Test - OK
 colnames(diet2)
-View(diet2)
+
+# description header --> ist ziemlich lang
+#View(diet2)
 
 
 ################################################
@@ -259,9 +265,11 @@ str(diet2)
 class(diet2)
 dim(diet2) # 9813 x 168
 head(diet2)
-View(diet2)
+#View(diet2)
 tail(diet2)
 # how many missing value in diet? - 704978 are missing
+
+# so viele NA Werte
 table(is.na(diet2))
 
 # shiss druff
@@ -277,7 +285,7 @@ table(is.na(diet2))
 
 # Wie viele f/m 2013-2014? chueche diagramm
 
-View(demographicData)
+#View(demographicData)
 
 # Geburtsort: DMDBORN4 Categorical -> 1: USA, 2: other, 77: Refused, 99: don't know
 factor(demographicData$DMDBORN4)
@@ -306,35 +314,38 @@ factor(demographicData$RIAGENDR)
 #DRQSDT11 - Gluten-free/Celiac diet
 #DRQSDT12 - Renal/Kidney diet
 
-# Daten joinen mit demographischen daten
-diet3 <- merge(diet, demographicData, by = "SEQN")
 
+# Daten inner joinen mit demographischen daten
+diet3 <- merge(diet, demographicData, by = "SEQN")
 
 # korrelation zwischen diet x und Total zucker DR1TSUGR?
 #diet3 <- diet3[(!is.na(diet3$DRQSDT4) & !is.na(diet3$DR1TSUGR)),]
 #diet3 <- diet3[(!is.na(diet3$DR1TNUMF) & !is.na(diet3$DR1TNUMF)),]
 
-# get indices index scheiss
+
+# get index scheiss
 # features engineering
-supplementsInMg <- grep("(mg)", colnames(diet2))
+supplementsInMg <- grep("(mg)", colnames(diet2)) # Index: Alle Spalten mit Wortinhalt "(mg)" als Liste returnen
 
 colnames(diet3[supplementsInMg])
 
 
 #corCheck <- na.omit(diet3[, 50:60])
-corCheck <- na.omit(diet3[, supplementsInMg])
-
-
+corCheck <- na.omit(diet3[, supplementsInMg]) # DF für cor() vorbereiten
 
 d <- cor(corCheck)
+d
 summary(d, digits = 1)
+
+
 
 #install.packages("corrplot")
 library(corrplot)
 
+############ Plot Cor Matrix
 # Plotten wir mal den cor Marix
-corrplot(d, type = "upper", order = "hclust", 
-         tl.col = "black", tl.srt = 60)
+#corrplot(d, type = "upper", order = "hclust", 
+#         tl.col = "black", tl.srt = 60)
 
 
 #d <- as.data.frame(d)
@@ -352,22 +363,24 @@ library("PerformanceAnalytics")
 #chart.Correlation(corCheck, histogram=TRUE, pch=19) #scheint aufwändig zu sein?
 
 
-
+# Plot Cor Heatmap
 # Get some colors
 numberOfCols <- 25
 col<- colorRampPalette(c("blue", "white", "red"))(numberOfCols)
-heatmap(x = d, col = col, symm = TRUE)
+#heatmap(x = d, col = col, symm = TRUE)
 
 # DR1TNUMF - Number of foods/beverages reported
 # DR1TKCAL - Energy (kcal) firstday
 
 
 
-
-# Piechart wer ist alles was?
+############## Was wurde gegessen in den letzten 30 Tagen?
+# Piechart 
 columnEaten <- grep("eaten during past 30 days", colnames(diet2))
 
-names(diet3[columnEaten])
+names(diet3[columnEaten]) # Keys
+names(diet2[columnEaten]) # Description
+
 
 # test: nur bestimmte index
 # columnEaten <- columnEaten[22:23]
@@ -376,7 +389,7 @@ totalSum <- sum(diet3[,columnEaten], na.rm = T)
 columnSums <- colSums(diet3[,columnEaten], na.rm = T)
 
 #Relative
-columnSums <- columnSums/totalSum
+columnSums <- columnSums/totalSum *100 # prozentualer wert
 
 
 tmp1 <- data.frame(as.list(columnSums))
@@ -387,21 +400,24 @@ df <- data.frame(
   value = columnSums
 )
 
-
+# Plot hist
 bp <- ggplot(df, aes(x="", y=value, fill=group))+
   geom_bar(width = 1, stat = "identity")
-bp
+#bp
 
+# Plot pie
 pie <- bp + coord_polar("y", start=0)
-pie
+#pie
 
 ############################################################################# # ML Algo
 
-supplementsInMg <- grep("(mg)", colnames(diet2))[15:19]
+# Salzkonsum ein Problem?
+supplementsInMg <- grep("(mg)", colnames(diet2))
 saltIndex <- grep("add ordinary salt to ", colnames(diet2))
 
 lstOfKeys <- colnames(diet3[supplementsInMg])
 colnames(diet3[saltIndex])
+# Salzkonsum nicht weiterverfolgt
 
 # f <- as.formula(paste("c(", paste(rpartInput(), collapse = "+"), sep ="~"))
 
@@ -409,30 +425,40 @@ colnames(diet3[saltIndex])
 #salt
 #plot(DR1TCHOL  ~ DBD100 +DR1TATOA, data = diet3, )
 
+# Gibt es eine lineare Korrelation zwischen den Stoffen?
+########## Basic Scatterplot Matrix
 
-# Basic Scatterplot Matrix
+supplementsInMg <- grep("(mg)", colnames(diet2))
+randList <- sample(x = c(1:length(supplementsInMg)), size = 4)  # nur 3 spalten --> sonst dauert das zu lange
+supplementsInMg <- supplementsInMg[randList]
+
+saltIndex <- grep("add ordinary salt to ", colnames(diet2))
+lstOfKeys <- colnames(diet3[supplementsInMg])
+colnames(diet3[saltIndex])
+
 param1 <- as.formula(paste(" ", paste(lstOfKeys, collapse = " + "), sep = "~"))
-pairs(param1,data=diet3, main="Simple Scatterplot Matrix")
+#pairs(param1,data=diet3, main="Linearer zusammenhang zwischen einzelnen (mg)?") # 5 sek
 
 #library(lattice)
 
+#Matrixplot
+#pairs(diet3[supplementsInMg]) # achtung allenfalls zu viel
 
-#Matrixplot 
-pairs(diet3[supplementsInMg]) # achtung allenfalls zu viel
 
-#Matrix Plot von Hand auslesen
+######## Matrix Plot von Hand auslesen
 head(cor(na.omit(diet3[grep("(mg)", colnames(diet2))])) > 0.88) #linearen cor DR1TCHL vs. DR1TCHOL
-pairs(diet3[c(60, 42)], labels = names(diet2[c(60, 42)])) # mit labels machen
+#pairs(diet3[c(60, 42)], labels = names(diet2[c(60, 42)])) # mit labels machen --> aha eine hier ist der Wert sehr gut
 
 #Boxplot
-boxplot(diet3[supplementsInMg])
+#boxplot(diet3[supplementsInMg])
 
 
 ########## matrix plot schöner - dauer lange #########
 # http://www.sthda.com/english/wiki/scatter-plot-matrices-r-base-graphs
 
 # Bist du in einer Diät? 1: yes, 2: no, 9: don't know, .: Missing/NA 
-names(diet[18])
+names(diet3[18])
+names(diet2[18])
 unique(diet3$DRQSDIET)
 
 # NA werte mit 9 ersetzen
@@ -447,8 +473,17 @@ palette <- distinctColorPalette(n)
 
 my_cols <- palette #c("#00AFBB", "#E7B800", "#FC4E07")  
 pairs(diet3[,supplementsInMg], pch = 19,  cex = 0.5,
-      col = my_cols[diet3$DRQSDIET], #punde my_cols[iris$Species]
+      col = my_cols[diet3$DRQSDIET], 
       lower.panel=NULL)
+
+#ha <- as.factor(diet3$DRQSDIET)
+#table(ha)
+
+#sum(na.omit(diet3$DRQSDIET))
+
+#table(is.na(diet$DRQSDIET))
+#8783+1030
+
 
 # Correlation panel
 panel.cor <- function(x, y){
@@ -472,6 +507,8 @@ pairs(na.omit(diet3[,supplementsInMg]),
 
 
 
+
+
 #corCheck <- na.omit(diet3[, 50:60])
 corCheck <- na.omit(diet3[, supplementsInMg])
 
@@ -487,9 +524,16 @@ unique(d[d > 0.85 & d<1])
 d > 0.85
 
 
+grep("DR1TCHL", names(diet3)) # 60
+names(diet2[60]) 
+
+grep("DR1TCHOL", names(diet3)) # 42
+names(diet2[42])
+
+
 ######################## Multilinear regression
 
-# haben die Nährstoffe einen Zusammenhalt mit unterschiedlichen Total Haushaltseinkommen oder Diet und Gewicht?
+############# haben die Nährstoffe einen Zusammenhalt mit unterschiedlichen Total Haushaltseinkommen oder Diet und Gewicht?
 
 ## Questionary Daten einlesen
 rawQuestionaryData <- read.csv("questionnaire.csv", stringsAsFactors = FALSE)
@@ -507,7 +551,7 @@ incomeIndex <- grep("INDHHIN2", names(diet4)) #215
 
 #Bereinigung
 demographicVariableList <- demographicVariableList[(demographicVariableList$Begin.Year==2013 & demographicVariableList$EndYear==2014),]
-View(demographicVariableList)
+#View(demographicVariableList)
 
 unique(diet4$WHD020)
 
@@ -517,14 +561,14 @@ diet4 <- diet4[!is.na(diet4$WHD020),] #7777 -> refused löschen
 
 #diet3 <- diet3[(!is.na(diet3$DRQSDT4) & !is.na(diet3$DR1TSUGR)),]
 
-View(diet4)
+#View(diet4)
 
 
 
 #param1 <- as.formula(paste(" ", paste(lstOfKeys, collapse = " + "), sep = "~"))
 param2 <- as.formula(paste("WHD020 ~ INDHHIN2", paste(names(diet4[, grep("(mg)", names(diet2))]), collapse = " + "), sep = "+"))
 
-
+param2
 
 
 
@@ -545,7 +589,7 @@ ml <- lm(WHD020 ~
          , data = diet4)
 summary(ml)
 
-plot(ml)
+#plot(ml)
 
 dd <- c("INDHHIN2", "DR1TCHOL","DR1TNIAC", "DR1TPHOS", "DR1TMAGN", "DR1TCAFF")
 
@@ -558,7 +602,7 @@ getDescriptionTmp <- function(diet_key) {
 
 list_of_keys <- dd
 list_of_description <-unlist(lapply(list_of_keys, getDescriptionTmp))
-
+list_of_description #Einkommen beeinflust durch Phosphorus, Magnesium, Caffeine
 
 ###### shiny #################################################################
 #install.packages("shiny")
@@ -567,17 +611,20 @@ library(rpart)
 library(ggplot2)
 
 
+
 #install.packages("shinyBS")
 library(shinyBS)
 #install.packages("gridExtra")
 library(gridExtra)
 
 
+supplementsInMg <- grep("(mg)", colnames(diet2)) # Index: Alle Spalten mit Wortinhalt "(mg)" als Liste returnen
 
+lstStoffe <- supplementsInMg
 
 u <- shinyUI(fluidPage(
   tabsetPanel(
-    tabPanel("tab 1",
+    tabPanel("Beispiel",
              titlePanel("title panel"),
              sidebarLayout(position = "left", 
                            sidebarPanel("sidebar panel",
@@ -593,37 +640,19 @@ u <- shinyUI(fluidPage(
                            )
              )
     ),
-    tabPanel("tab 3", "bullshit"),
 
     tabPanel("tab 5", 
-             
-             titlePanel("Correlation Matrix"),
-             sidebarLayout(
-               position = "right",
-               sidebarPanel(
-                 sliderInput(inputId = "bins",
-                             label = "Anzahl Farbtiefe",
-                             min = 1, 
-                             max = 30, 
-                             value = 20)
-               ),
-               mainPanel(plotOutput(outputId = "distPlot"))
-             )
-
-             
-             ),
-    tabPanel("tab 99", 
-             titlePanel("Pie scheisse"),
+             titlePanel("Was wurde in den letzen 30 Tagen wie oft verzehrt?"),
              sidebarLayout(
                sidebarPanel({
                  categories <- c("hist", "pie")
                  radioButtons(inputId = "category",
-                              label = "For which category KANN geloesch werden", categories)
+                              label = "Diagram", categories)
                },
                {
                  selectInput(
                    "rpart",
-                   "Choose Variables for rpart:",
+                   "Wähle Nahrung x:",
                    c(colnames(tmp1)), # names(diet3[columnEaten])
                    multiple = TRUE,
                    selected = "examide"
@@ -638,7 +667,24 @@ u <- shinyUI(fluidPage(
              )
              
              ),
-    tabPanel("tab 100", 
+    tabPanel("tab 6", 
+             
+             titlePanel("Correlation Matrix"),
+             sidebarLayout(
+               position = "right",
+               sidebarPanel(
+                 sliderInput(inputId = "bins",
+                             label = "Anzahl Farben",
+                             min = 1, 
+                             max = 30, 
+                             value = 20)
+               ),
+               mainPanel(plotOutput(outputId = "distPlot"))
+             )
+             
+             
+    ),
+    tabPanel("tab 7", 
              titlePanel("Correlation Matrix 2"),
              sidebarLayout(
                sidebarPanel(
@@ -646,7 +692,7 @@ u <- shinyUI(fluidPage(
                  selectInput(
                    "rpart2",
                    "Choose Variables for rpart:",
-                   c(colnames(diet3[supplementsInMg])), # names(diet3[columnEaten]) grep("(mg)", colnames(diet2))
+                   c(colnames(diet3[lstStoffe])), # names(diet3[columnEaten]) grep("(mg)", colnames(diet2))
                    multiple = TRUE,
                    selected = "examide"
                  )
@@ -695,9 +741,19 @@ s <- shinyServer(function(input, output)
   output$distPlot = renderPlot(
     {
       
+      supplementsInMg <- grep("(mg)", colnames(diet2)) # Index: Alle Spalten mit Wortinhalt "(mg)" als Liste returnen
+      colnames(diet3[supplementsInMg])
+
+      corCheck <- na.omit(diet3[, supplementsInMg]) # DF für cor() vorbereiten
+      
+      heatmapDaten <- cor(corCheck)
+      d
+      
+      
+      
       numberOfCols <- input$bins
       col<- colorRampPalette(c("blue", "white", "red"))(numberOfCols)
-      heatmap(x = d, col = col, symm = TRUE)
+      heatmap(x = heatmapDaten, col = col, symm = TRUE)
       
     }
   )
@@ -821,8 +877,6 @@ s <- shinyServer(function(input, output)
       }
       
       
-      
-      
     }
     
   )
@@ -883,8 +937,6 @@ s <- shinyServer(function(input, output)
       #corCheck <- na.omit(diet3[, 50:60])
       corCheck <- na.omit(diet3[, list_of_key_index])
       
-      
-      
       d <- cor(corCheck)
       summary(d, digits = 1)
       
@@ -894,7 +946,6 @@ s <- shinyServer(function(input, output)
       # Plotten wir mal den cor Marix
       corrplot(d, type = "upper", order = "hclust", 
                tl.col = "black", tl.srt = 60)
-      
       
       
     }
