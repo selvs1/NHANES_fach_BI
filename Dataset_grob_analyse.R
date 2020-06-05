@@ -323,7 +323,7 @@ diet3 <- merge(diet, demographicData, by = "SEQN")
 #diet3 <- diet3[(!is.na(diet3$DR1TNUMF) & !is.na(diet3$DR1TNUMF)),]
 
 
-# get index scheiss
+# get index
 # features engineering
 supplementsInMg <- grep("(mg)", colnames(diet2)) # Index: Alle Spalten mit Wortinhalt "(mg)" als Liste returnen
 
